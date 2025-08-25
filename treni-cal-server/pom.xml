@@ -1,0 +1,56 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>it.mario.trenical</groupId>
+        <artifactId>trenical</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>treni-cal-server</artifactId>
+    <name>treni-cal-server</name>
+
+    <dependencies>
+        <!-- API generate dal modulo proto -->
+        <dependency>
+            <groupId>it.mario.trenical</groupId>
+            <artifactId>treni-cal-proto</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- gRPC runtime -->
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-netty-shaded</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-services</artifactId> <!-- opzionale: health, reflection -->
+        </dependency>
+
+        <!-- JDBC + SQLite -->
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.46.0.0</version>
+        </dependency>
+
+        <!-- Test -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.10.2</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+            </plugin>
+        </plugins>
+    </build>
+</project>

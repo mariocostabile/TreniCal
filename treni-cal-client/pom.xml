@@ -1,0 +1,39 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>it.mario.trenical</groupId>
+        <artifactId>trenical</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>treni-cal-client</artifactId>
+    <name>treni-cal-client</name>
+
+    <dependencies>
+        <!-- API generate -->
+        <dependency>
+            <groupId>it.mario.trenical</groupId>
+            <artifactId>treni-cal-proto</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- gRPC client -->
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-netty-shaded</artifactId>
+        </dependency>
+
+        <!-- JavaFX (se fai GUI desktop) -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>22.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>22.0.2</version>
+        </dependency>
+    </dependencies>
+</project>

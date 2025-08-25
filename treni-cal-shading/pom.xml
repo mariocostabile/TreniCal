@@ -1,0 +1,44 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>it.mario.trenical</groupId>
+        <artifactId>trenical</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>treni-cal-shading</artifactId>
+    <name>treni-cal-shading</name>
+    <packaging>pom</packaging>
+
+    <!-- Questo modulo non ha codice: produce un fat-jar del server -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals><goal>shade</goal></goals>
+                        <configuration>
+                            <artifactSet>
+                                <includes>
+                                    <include>it.mario.trenical:treni-cal-server</include>
+                                </includes>
+                            </artifactSet>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <!-- Cambia con la tua main del server -->
+                                    <mainClass>it.mario.trenical.server.bootstrap.TreniCalServer</mainClass>
+                                </transformer>
+                            </transformers>
+                            <finalName>treni-cal-fat</finalName>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

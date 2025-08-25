@@ -1,0 +1,56 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>it.mario.trenical</groupId>
+    <artifactId>trenical</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>TreniCal</name>
+
+    <modules>
+        <module>treni-cal-proto</module>
+        <module>treni-cal-server</module>
+        <module>treni-cal-client</module>
+        <module>treni-cal-shading</module>
+    </modules>
+
+    <!-- Versioni centralizzate -->
+    <properties>
+        <java.version>21</java.version>
+        <grpc.version>1.62.2</grpc.version>
+        <protobuf.version>3.24.4</protobuf.version>
+        <protobuf.plugin.version>0.6.1</protobuf.plugin.version>
+        <maven.compiler.release>${java.version}</maven.compiler.release>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- BOM gRPC: gestisce versioni coerenti -->
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-bom</artifactId>
+                <version>${grpc.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!-- Compiler per tutti i moduli -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.11.0</version>
+                    <configuration>
+                        <release>${maven.compiler.release}</release>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>
