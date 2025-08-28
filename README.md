@@ -27,7 +27,7 @@
 - **NFR-3 Affidabilità** – riavvio sicuro moduli.
 - **NFR-4 Usabilità** – CLI/GUI lineare per casi principali.
 - **NFR-5 Modularità** – separazione in 4 moduli Maven.
-- **NFR-6 Integrazione** – microservizio esterno (Ruby) via gRPC.
+- **NFR-6 Integrazione** – microservizio esterno (**Python**) via gRPC.
 
 ### Milestones
 - **M1 – Core MVP (FR-1,2,3,5,8)**  
@@ -46,8 +46,8 @@
 - **FR-8**: subscribe a un `trainId` riceve ≥2 aggiornamenti streaming (ritardo/binario), poi `onCompleted()`.
 
 ### Tracciabilità (Servizi ↔ Moduli)
-- **treni-cal-proto**: definizioni `TreniCalService` + DTO (Station, Train, Ticket, …).
-- **treni-cal-server**: `api.grpc/*ServiceImpl` per FR-1/2/3/5/8 (M1), poi estensioni M2–M4.
+- **treni-cal-proto**: definizioni `TreniCalService` + DTO (Station, Train, Ticket, …). 
+- **treni-cal-server**: `api.grpc/*ServiceImpl` per FR-1/2/3/5/8 (M1), poi estensioni M2–M4. 
 - **treni-cal-client**: `net/GrpcClientService` + GUI/CLI.
 - **treni-cal-shading**: JAR eseguibile.
 

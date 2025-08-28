@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package viaggiatreno;
+
+import "google/protobuf/timestamp.proto";
+
+option java_multiple_files = true;
+option java_package = "it.mario.trenical.viaggiatreno.proto";
+option java_outer_classname = "ViaggiaTrenoProto";
+
+// ---------------- ENUM ----------------
+enum TrainStatus {
+  TRAIN_STATUS_UNKNOWN   = 0;
+  TRAIN_STATUS_ON_TIME   = 1;
+  TRAIN_STATUS_DELAYED   = 2;
+  TRAIN_STATUS_CANCELLED = 3;
+}
+
+// --------------- STAZIONI --------------
+message SearchStationRequest {
+  string query = 1; // es: "Roma"
+}
+
+message ViaggiaTrenoStation {
+  string name = 1; // "Roma Termini"
+  string code = 2; // "RMT"
+  string city = 3; // "Roma"
+  // facoltativo ma utile se la sorgente ha id interni:
+  string id   = 4; // es: "S09015"
+}
+
+message SearchStationResponse {
+  repeated ViaggiaTrenoStation stations = 1;
+}
+
+// ---------- SOLUZIONI DI VIAGGIO -------
+message SearchSolutionsRequest {
+  string origin_code       = 1; // es: "RMT"
+  string destination_code  = 2; // es: "MCN"
+  google.protobuf.Timestamp departure_after = 3;
+}
+
+message TrainSolution {
+  string train_code = 1; // es: "T_FR_9002"
+  string origin_code = 2;
+  string destination_code = 3;
+  google.protobuf.Timestamp departure_time = 4;
+  google.protobuf.Timestamp arrival_time   = 5;
+}
+
+message SearchSolutionsResponse {
+  repeated TrainSolution solutions = 1;
+}
+
+// --------------- REAL-TIME -------------
+message GetTrainStatusRequest {
+  string train_code = 1; // es: "T_FR_9002"
+}
+
+message GetTrainStatusResponse {
+  string train_code = 1;
+  TrainStatus status = 2;                       // tipizzato
+  int32  delay_minutes = 3;
+  string platform = 4;
+  google.protobuf.Timestamp last_update = 5;    // <- al posto di timestamp_iso
+}
+
+// --------------- SERVIZIO --------------
+service ViaggiaTrenoService {
+  rpc SearchStation   (SearchStationRequest)   returns (SearchStationResponse);
+  rpc SearchSolutions (SearchSolutionsRequest) returns (SearchSolutionsResponse);
+  rpc GetTrainStatus  (GetTrainStatusRequest)  returns (GetTrainStatusResponse);
+}

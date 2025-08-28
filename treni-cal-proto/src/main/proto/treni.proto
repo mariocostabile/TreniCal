@@ -1,0 +1,96 @@
+syntax = "proto3";
+
+package trenical;
+
+import "google/protobuf/timestamp.proto";
+
+option java_multiple_files = true;
+option java_package = "it.mario.trenical.proto";
+option java_outer_classname = "TreniCalProto";
+
+enum TrainStatus {
+  TRAIN_STATUS_UNKNOWN   = 0;
+  TRAIN_STATUS_ON_TIME   = 1;
+  TRAIN_STATUS_DELAYED   = 2;
+  TRAIN_STATUS_CANCELLED = 3;
+}
+
+message Station {
+  string id   = 1;  // es: "ST_RMT"
+  string name = 2;  // es: "Roma Termini"
+  string code = 3;  // es: "RMT"
+  string city = 4;  // es: "Roma"
+}
+
+message Train {
+  string id               = 1; // es: "TR_9002"
+  string code             = 2; // es: "T_FR_9002"
+  string origin_code      = 3; // es: "RMT"
+  string origin_name      = 4; // es: "Roma Termini"
+  string destination_code = 5; // es: "MCE"
+  string destination_name = 6; // es: "Milano Centrale"
+  google.protobuf.Timestamp departure_time = 7; // <-- TIMESTAMP
+  google.protobuf.Timestamp arrival_time   = 8; // <-- TIMESTAMP
+}
+
+message Ticket {
+  string id               = 1; // es: "TCK-0001"
+  string train_id         = 2; // es: "TR_9002"
+  string passenger_name   = 3; // es: "Mario Rossi"
+  string class_of_service = 4; // es: "STANDARD" / "PREMIUM"
+  google.protobuf.Timestamp purchase_date = 5; // <-- TIMESTAMP
+}
+
+message SearchStationsRequest {
+  string query = 1;
+}
+message SearchStationsResponse {
+  repeated Station stations = 1;
+}
+
+message SearchTrainsRequest {
+  string origin_code      = 1; // es: "RMT"
+  string destination_code = 2; // es: "MCE"
+  // filtro semplice opzionale: earliest departure
+  google.protobuf.Timestamp departure_after = 3; // <-- TIMESTAMP (opzionale)
+}
+message SearchTrainsResponse {
+  repeated Train trains = 1;
+}
+
+message PurchaseTicketRequest {
+  string train_id         = 1;
+  string passenger_name   = 2;
+  string class_of_service = 3;
+  int32  quantity         = 4;
+}
+message PurchaseTicketResponse {
+  repeated Ticket tickets = 1;
+}
+
+message CancelTicketRequest {
+  string ticket_id = 1;
+}
+message CancelTicketResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message SubscribeTrainStatusRequest {
+  string train_code = 1; // es: "T_FR_9002"
+}
+message TrainStatusUpdate {
+  string train_code                 = 1;
+  int32  delay_minutes             = 2;
+  string platform                  = 3;
+  TrainStatus status               = 4;
+  google.protobuf.Timestamp event_time = 5; // <-- TIMESTAMP
+}
+
+service TreniCalService {
+  rpc SearchStations       (SearchStationsRequest) returns (SearchStationsResponse);
+  rpc SearchTrains         (SearchTrainsRequest)   returns (SearchTrainsResponse);
+  rpc PurchaseTicket       (PurchaseTicketRequest) returns (PurchaseTicketResponse);
+  rpc CancelTicket         (CancelTicketRequest)   returns (CancelTicketResponse);
+  rpc SubscribeTrainStatus (SubscribeTrainStatusRequest) returns (stream TrainStatusUpdate);
+}

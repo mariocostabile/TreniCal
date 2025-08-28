@@ -2,39 +2,63 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>it.mario.trenical</groupId>
         <artifactId>trenical</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
+
     <artifactId>treni-cal-shading</artifactId>
     <name>treni-cal-shading</name>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
 
-    <!-- Questo modulo non ha codice: produce un fat-jar del server -->
+    <dependencies>
+        <!-- porta dentro il server (che a sua volta dipende da proto) -->
+        <dependency>
+            <groupId>it.mario.trenical</groupId>
+            <artifactId>treni-cal-server</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.5.1</version>
+                <version>3.5.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
-                        <goals><goal>shade</goal></goals>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
                         <configuration>
-                            <artifactSet>
-                                <includes>
-                                    <include>it.mario.trenical:treni-cal-server</include>
-                                </includes>
-                            </artifactSet>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <finalName>treni-cal-fat</finalName>
+
+                            <!-- MERGE dei META-INF/services (evita warning gRPC) + Manifest con main -->
                             <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <!-- Cambia con la tua main del server -->
                                     <mainClass>it.mario.trenical.server.bootstrap.TreniCalServer</mainClass>
                                 </transformer>
                             </transformers>
-                            <finalName>treni-cal-fat</finalName>
+
+                            <!-- Escludi meta irrilevanti e module-info per evitare duplicati -->
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/MANIFEST.MF</exclude>
+                                        <exclude>META-INF/LICENSE*</exclude>
+                                        <exclude>META-INF/NOTICE*</exclude>
+                                        <exclude>META-INF/versions/**/module-info</exclude>
+                                        <exclude>META-INF/versions/**/module-info.class</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
                         </configuration>
                     </execution>
                 </executions>
