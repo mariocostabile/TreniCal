@@ -39,7 +39,7 @@
             <artifactId>grpc-services</artifactId>
         </dependency>
 
-        <!-- Protobuf runtime (serve per com.google.protobuf.Timestamp) -->
+        <!-- Protobuf runtime (Timestamp) -->
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
@@ -53,7 +53,7 @@
             <version>3.46.0.0</version>
         </dependency>
 
-        <!-- Log semplice (facoltativo se usi java.util.logging) -->
+        <!-- Log semplice (se vuoi usare SLF4J) -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
@@ -71,6 +71,43 @@
 
     <build>
         <plugins>
+            <!-- Esegui il server con: mvn -pl treni-cal-server exec:java -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <mainClass>it.mario.trenical.server.ServerMain</mainClass>
+                    <classpathScope>runtime</classpathScope>
+                </configuration>
+            </plugin>
+
+            <!-- JAR eseguibile: mvn -pl treni-cal-server -DskipTests package && java -jar target/treni-cal-server-1.0-SNAPSHOT.jar -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Evita conflitti con dipendenze di gRPC -->
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>it.mario.trenical.server.ServerMain</mainClass>
+                                </transformer>
+                            </transformers>
+                            <minimizeJar>false</minimizeJar>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Test -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
